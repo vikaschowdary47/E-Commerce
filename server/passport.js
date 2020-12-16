@@ -32,14 +32,14 @@ passport.use(
 // Authentication
 passport.use(
   new LocalStrategy((email, password, done) => {
-    User.findOne({ email: email }, (err, user) => {
+    User.findOne({ email }, (err, user) => {
       // !database error
-      if (err) return done(err);
+      if (err) return done("db err", err);
       // !User not found
       if (!user) return done(null, false);
       // checking password
       bcrypt.compare(password, user.password, (err, result) => {
-        if (err) throw err;
+        if (err) return done("db2 err", err);
         if (result === true) {
           return done(null, user);
         } else {

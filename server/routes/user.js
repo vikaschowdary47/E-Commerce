@@ -59,10 +59,32 @@ router.post("/register", async (req, res) => {
 
 // login route
 
-router.post(
-  "/login",
-  passport.authenticate("local", { session: false }),
-  (req, res) => {
+// router.post(
+//   "/login",
+//   passport.authenticate("local", { session: false }),
+//   (req, res) => {
+//     if (req.isAuthenticated()) {
+//       const { _id, username, email } = req.user;
+//       const token = signToken(_id);
+//       res.cookie("jwt_token", token, { httpOnly: true, sameSite: true });
+//       res
+//         .status(200)
+//         .json({ isAuthenticated: true, user: { username, email } });
+//     }
+//     if (err) {
+//       res.send(err);
+//     }
+//   }
+// );
+
+router.post("/login", (req, res, next) => {
+  passport.authenticate("local", { session: false }, (err, user, info) => {
+    // let email = req.body.email;
+    // console.log(User.findOne({ email }), (err, user) => {
+    //   if (err) return err;
+    //   if (user) return user;
+    // });
+    // console.log(username, email);
     if (req.isAuthenticated()) {
       const { _id, username, email } = req.user;
       const token = signToken(_id);
@@ -71,10 +93,9 @@ router.post(
         .status(200)
         .json({ isAuthenticated: true, user: { username, email } });
     }
-    if (err) {
-      res.send(err);
-    }
-  }
-);
+    if (err) return err;
+    if (!user) return res.status(500).send("No user Exists");
+  })(req, res, next);
+});
 
 module.exports = router;

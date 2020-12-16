@@ -6,7 +6,7 @@ require("dotenv").config();
 
 const app = express();
 
-app.use(cors());
+// app.use(cors());
 app.use(cookieParser());
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true }));

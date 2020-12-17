@@ -2,6 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const passport = require("passport");
+const session = require("express-session");
 require("dotenv").config();
 
 const app = express();
@@ -10,6 +12,18 @@ const app = express();
 app.use(cookieParser());
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true }));
+
+app.use(
+  session({
+    secret: process.env.JWT_SECRET,
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+require("./passport")(passport);
 
 // db
 const uri = process.env.MONGO_URI;

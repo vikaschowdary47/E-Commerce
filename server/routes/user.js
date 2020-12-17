@@ -3,6 +3,7 @@ const User = require("../models/User");
 const bcrypt = require("bcrypt");
 
 const passport = require("passport");
+const passportLocal = require("passport-local").Strategy;
 const passportConfig = require("../passport");
 const JWT = require("jsonwebtoken");
 
@@ -77,24 +78,66 @@ router.post("/register", async (req, res) => {
 //   }
 // );
 
-router.post("/login", (req, res, next) => {
-  passport.authenticate("local", { session: false }, (err, user, info) => {
-    // let email = req.body.email;
-    // console.log(User.findOne({ email }), (err, user) => {
-    //   if (err) return err;
-    //   if (user) return user;
-    // });
-    // console.log(username, email);
-    if (req.isAuthenticated()) {
-      const { _id, username, email } = req.user;
-      const token = signToken(_id);
-      res.cookie("jwt_token", token, { httpOnly: true, sameSite: true });
-      res
-        .status(200)
-        .json({ isAuthenticated: true, user: { username, email } });
+router.route("/login").post((req, res, next) => {
+  passport.authenticate("local", (err, user, info) => {
+    if (err) throw err;
+    if (!user) res.send("no user");
+    else {
+      req.logIn(user, (err) => {
+        if (err) throw err;
+        res.send("successfull auth");
+        console.log(user);
+      });
     }
-    if (err) return err;
-    if (!user) return res.status(500).send("No user Exists");
+    // console.log(err);
+    // req.login(user, { session: false }, (err) => {
+    //   if (err) console.log(err);
+    //   if (!user) res.send("no user");
+    //   console.log("authentication successful", { user });
+    // });
+    // console.log(user);
+    // console.log(req.isAuthenticated());
+
+    // const email = req.body.email;
+    // const password = req.body.password;
+    // // console.log(email);
+    // User.findOne({ email }, (err, user) => {
+    //   if (err) res.send("there's an error", err);
+    //   if (!user) res.send("no user");
+    //   bcrypt.compare(password, user.password, (err, result) => {
+    //     if (err) res.send("err");
+    //     if (result === true) {
+    //       const token = signToken(user._id);
+    //       res.cookie("jwt_token", token, { httpOnly: true, sameSite: true });
+    //       res.status(200).json({
+    //         isAuthenticated: true,
+    //         user: { username: user.username, email: user.email },
+    //       });
+    //       // return res.send("successfully logged in ", {
+    //       //   username: user.username,
+    //       //   email,
+    //       // });
+    //     } else {
+    //       return res.send("wrong password");
+    //     }
+    //   });
+    // });
+    // if (req.isAuthenticated()) {
+    //   const { _id, username, email } = req.user;
+    //   const token = signToken(_id);
+    //   res.cookie("jwt_token", token, { httpOnly: true, sameSite: true });
+    //   res
+    //     .status(200)
+    //     .json({ isAuthenticated: true, user: { username, email } });
+    // }
+    // if (err) return err;
+    // if (!user) return res.status(500).send("No user found and Exists");
+    // else {
+    //   req.logIn(user, (err) => {
+    //     if (err) throw err;
+    //     res.send("success");
+    //   });
+    // }
   })(req, res, next);
 });
 

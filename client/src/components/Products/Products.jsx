@@ -66,7 +66,7 @@ const products = [
 
 const Products = () => {
   const data = useContext(GlobalContext);
-  console.log(data);
+  // console.log(data);
   return (
     <main className="main">
       <Grid container justify="center" spacing={2}>

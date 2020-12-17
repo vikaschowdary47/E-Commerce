@@ -1,12 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import "./App.css";
 import { NavBar, Products } from "./components";
+import { Login, Signup } from "./components/Auth";
 import { commerce } from "./lib/commerce";
-import { GlobalContextProvider } from "./context/GlobalState";
+import { GlobalContextProvider, GlobalContext } from "./context/GlobalState";
 
 function App() {
   const [products, setProducts] = useState([]);
-
+  const data = useContext(GlobalContext);
+  const { isAuthenticated } = data;
+  console.log(data);
   const fetchProducts = async () => {
     const { data } = await commerce.products.list();
     setProducts(data);
@@ -14,12 +17,18 @@ function App() {
   useEffect(() => {
     fetchProducts();
   }, []);
-  console.log(products, "products");
+  // console.log(products, "products");
   return (
     <GlobalContextProvider>
       <div className="App">
         <NavBar />
-        <Products />
+        {!isAuthenticated ? (
+          <Login />
+        ) : (
+          <>
+            <Products />
+          </>
+        )}
       </div>
     </GlobalContextProvider>
   );

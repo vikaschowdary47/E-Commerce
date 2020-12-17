@@ -11,11 +11,14 @@ export const reducer = (state, action) => {
       };
     case "LOGOUT":
       localStorage.clear();
+      console.log("LOGOUT in reducer");
+      console.log(state);
       return {
         ...state,
         isAuthenticated: false,
         user: null,
       };
+    // console.log(state);
     default:
       return state;
   }

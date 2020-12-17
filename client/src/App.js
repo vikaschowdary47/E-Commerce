@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import "./App.css";
-import { NavBar, Products } from "./components";
+import { NavBar, Products, Home } from "./components";
 import { Login, Signup } from "./components/Auth";
 import { commerce } from "./lib/commerce";
 import { GlobalContextProvider, GlobalContext } from "./context/GlobalState";
@@ -25,6 +25,9 @@ function App() {
         <NavBar isAuthenticated={isAuthenticated} />
         {!isAuthenticated ? (
           <>
+            <Route exact path="/">
+              <Home />
+            </Route>
             <Route exact path="/login">
               <Login />
             </Route>

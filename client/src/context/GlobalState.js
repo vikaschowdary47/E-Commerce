@@ -1,4 +1,5 @@
 import { createContext, useReducer } from "react";
+import { Redirect } from "react-router-dom";
 import { reducer } from "./Reducer";
 
 const initialState = {
@@ -12,9 +13,12 @@ export const GlobalContext = createContext(initialState);
 export const GlobalContextProvider = (props) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const Logout = (LOGOUT) => {
+  const Logout = () => {
+    console.log("Logout called");
+    state.isAuthenticated = false;
+    Redirect("/");
     dispatch({
-      type: LOGOUT,
+      type: "LOGOUT",
     });
   };
   return (

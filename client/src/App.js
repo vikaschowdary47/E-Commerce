@@ -4,6 +4,7 @@ import { NavBar, Products } from "./components";
 import { Login, Signup } from "./components/Auth";
 import { commerce } from "./lib/commerce";
 import { GlobalContextProvider, GlobalContext } from "./context/GlobalState";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -21,13 +22,20 @@ function App() {
   return (
     <GlobalContextProvider>
       <div className="App">
-        <NavBar />
+        <NavBar isAuthenticated={isAuthenticated} />
         {!isAuthenticated ? (
-          <Login />
-        ) : (
           <>
-            <Products />
+            <Route exact path="/login">
+              <Login />
+            </Route>
+            <Route exact path="/signup">
+              <Signup />
+            </Route>
           </>
+        ) : (
+          <Router>
+            <Products />
+          </Router>
         )}
       </div>
     </GlobalContextProvider>

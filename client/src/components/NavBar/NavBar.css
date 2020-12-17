@@ -1,6 +1,15 @@
+.nav_bar {
+  padding: 0 20px;
+  margin: 0 20px;
+}
 .app_bar {
   margin-bottom: 30px;
 }
 .cart_icon {
   margin-left: auto;
+  display: flex;
+  padding: 0;
+}
+button:focus {
+  outline: none;
 }
